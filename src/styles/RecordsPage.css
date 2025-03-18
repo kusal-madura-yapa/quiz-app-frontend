@@ -85,3 +85,18 @@
   .home-button:hover {
     background: #0056b3;
   }
+
+  .toggle-button {
+    background-color: #3498db;
+    color: white;
+    padding: 8px 12px;
+    margin-top: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+  
+  .toggle-button:hover {
+    background-color: #2980b9;
+  }

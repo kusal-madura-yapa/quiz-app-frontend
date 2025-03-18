@@ -4,7 +4,7 @@ function QuestionScreen({ currentQuestion, isAnswerSubmitted, selectedAnswer, ha
   return (
     <div className="question-screen">
       <div className="score-board">
-        <span className="score">Score: {Math.round(score)}</span>
+        <span className="score">Score: {score !== undefined ? Math.round(score) : 0}</span>
         <span className="knowledge-level">Knowledge Level: {(knowledgeLevel * 100).toFixed(1)}%</span>
       </div>
       
