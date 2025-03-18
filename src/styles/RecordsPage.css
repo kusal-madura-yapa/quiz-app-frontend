@@ -1,0 +1,87 @@
+.records-page {
+    max-width: 900px;
+    margin: 20px auto;
+    padding: 20px;
+    text-align: center;
+  }
+  
+  .title {
+    font-size: 26px;
+    margin-bottom: 20px;
+  }
+  
+  .no-records {
+    font-size: 18px;
+    color: #888;
+  }
+  
+  .records-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .record-card {
+    background: #f9f9f9;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    text-align: left;
+  }
+  
+  .record-card h2 {
+    color: #007bff;
+    margin-bottom: 10px;
+  }
+  
+  .weak-areas {
+    background: #ffe8e8;
+    padding: 10px;
+    border-radius: 8px;
+    margin-top: 10px;
+  }
+  
+  .answers-section {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 15px;
+  }
+  
+  .correct-answers,
+  .incorrect-answers {
+    width: 48%;
+    padding: 10px;
+    border-radius: 8px;
+  }
+  
+  .correct-answers {
+    background: #e8ffe8;
+  }
+  
+  .incorrect-answers {
+    background: #ffe8e8;
+  }
+  
+  ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  li {
+    padding: 5px 0;
+  }
+  
+  .home-button {
+    margin-top: 20px;
+    padding: 10px 15px;
+    font-size: 16px;
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .home-button:hover {
+    background: #0056b3;
+  }
