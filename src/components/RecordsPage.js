@@ -1,102 +1,150 @@
-import React, { useState, useEffect } from 'react';
-import '../styles/RecordsPage.css';
+import React, { useState, useEffect } from "react";
+import "../styles/RecordsPage.css";
 
 function RecordsPage({ goHome }) {
   const [records, setRecords] = useState([]);
-  const [showDetails, setShowDetails] = useState({}); // Track visibility for each record
+  const [showDetails, setShowDetails] = useState({});
 
   useEffect(() => {
-    // Fetch previous quiz records from the backend
-    fetch('http://localhost:5001/api/previous_records?userid=1', { credentials: 'include' })  // Replace 1 with dynamic user ID
-      .then(response => response.json())
-      .then(data => {
-        console.log("Fetched Records:", data); // Debugging
-        setRecords(data.history || []);
-      })
-      .catch(error => console.error('Error fetching records:', error));
+    fetch("http://localhost:5001/api/previous_records?userid=1", {
+      credentials: "include",
+    })
+      .then((res) => res.json())
+      .then((data) => setRecords(data.history || []))
+      .catch((err) => console.error("Error fetching records:", err));
   }, []);
 
-  // Toggle visibility for a specific record
   const toggleDetails = (quizId) => {
-    setShowDetails(prev => ({
+    setShowDetails((prev) => ({
       ...prev,
-      [quizId]: !prev[quizId] // Toggle the state
+      [quizId]: !prev[quizId],
     }));
+  };
+
+  const renderBadge = (record) => {
+    if (record.final_score === record.total_questions * 3)
+      return <span className="badge gold">🏆 Perfect Score</span>;
+    if (record.total_questions >= 10)
+      return <span className="badge silver">🔥 Quiz Master</span>;
+    if (Object.keys(record.weak_areas).length === 0)
+      return <span className="badge green">💡 Flawless</span>;
+    return null;
   };
 
   return (
     <div className="records-page">
-      <h1 className="title">📜 Previous Quiz Records</h1>
+      <h1 className="title">📜 Your Quiz Journey</h1>
       {records.length === 0 ? (
         <p className="no-records">No previous records found.</p>
       ) : (
         <div className="records-container">
-          {records.map((record, index) => (
-            <div className="record-card" key={record.quiz_id}>
-              <h2>📌 Attempt {index + 1}</h2>
-              <p><strong>📝 Total Questions:</strong> {record.total_questions}</p>
-              <p><strong>🎯 Final Score:</strong> {record.final_score}</p>
-              <p><strong>📊 Knowledge Level:</strong> {(record.final_knowledge_level * 100).toFixed(1)}%</p>
+          {records.map((record, index) => {
+            const prev = records[index + 1];
+            const isImproved = prev && record.final_score > prev.final_score;
 
-              <div className="weak-areas">
-                <h3>⚠️ Weak Areas</h3>
-                {record.weak_areas && Object.keys(record.weak_areas).length > 0 ? (
-                  <ul>
-                    {Object.entries(record.weak_areas).map(([area, count]) => (
-                      <li key={area}>🔹 {area}: {count} mistakes</li>
-                    ))}
-                  </ul>
-                ) : (
-                  <p>✅ No weak areas</p>
-                )}
-              </div>
-
-              {/* Toggle Button */}
-              <button 
-                className="toggle-button" 
-                onClick={() => toggleDetails(record.quiz_id)}
+            return (
+              <div
+                className={`record-card ${isImproved ? "improved" : ""}`}
+                key={record.quiz_id}
               >
-                {showDetails[record.quiz_id] ? "🙈 Hide Questions" : "👀 Show Questions"}
-              </button>
+                <h2>
+                  🎮 Attempt {record.attempt_id} {renderBadge(record)}
+                </h2>
 
-              {/* Hidden Details (Correct and Incorrect Answers) */}
-              {showDetails[record.quiz_id] && (
-                <div className="answers-section">
-                  <div className="correct-answers">
-                    <h3>✅ Correct Answers</h3>
-                    {record.correct_answers && record.correct_answers.length > 0 ? (
-                      <ul>
-                        {record.correct_answers.map((question, i) => (
-                          <li key={i}><strong>Q:</strong> {question}</li>
-                        ))}
-                      </ul>
-                    ) : (
-                      <p>No correct answers</p>
-                    )}
+                <p>
+                  <strong>📝 Total Questions:</strong> {record.total_questions}
+                </p>
+                <p>
+                  <strong>🎯 Final Score:</strong> {record.final_score}
+                </p>
+
+                {/* Knowledge Progress */}
+                <div>
+                  📊 Knowledge Level:{" "}
+                  <strong>
+                    {(record.final_knowledge_level * 100).toFixed(1)}%
+                  </strong>
+                </div>
+                <div className="progress-containerRC">
+                  <div className="progress-barRC">
+                    <div
+                      className="progress-fill"
+                      style={{
+                        width: `${(record.final_knowledge_level * 100).toFixed(
+                          1
+                        )}%`,
+                      }}
+                    >
+                      <span className="progress-textRC">
+                        {(record.final_knowledge_level * 100).toFixed(1)}%
+                      </span>
+                    </div>
                   </div>
+                </div>
 
-                  <div className="incorrect-answers">
-                    <h3>❌ Incorrect Answers</h3>
-                    {record.incorrect_answers && record.incorrect_answers.length > 0 ? (
+                {/* Weak Areas */}
+                <div className="weak-areas">
+                  <h3>⚠️ Weak Areas</h3>
+                  {record.weak_areas &&
+                  Object.keys(record.weak_areas).length > 0 ? (
+                    <ul>
+                      {Object.entries(record.weak_areas).map(
+                        ([area, count]) => (
+                          <li key={area}>
+                            🔹 {area}: {count} mistakes
+                          </li>
+                        )
+                      )}
+                    </ul>
+                  ) : (
+                    <p>✅ No weak areas</p>
+                  )}
+                </div>
+
+                <button
+                  className="toggle-button"
+                  onClick={() => toggleDetails(record.quiz_id)}
+                >
+                  {showDetails[record.quiz_id]
+                    ? "🙈 Hide Questions"
+                    : "👀 Show Questions"}
+                </button>
+
+                {showDetails[record.quiz_id] && (
+                  <div className="answers-section">
+                    <div className="correct-answers">
+                      <h3>✅ Correct Answers</h3>
                       <ul>
-                        {record.incorrect_answers.map(({ question, correct_answer }, i) => (
+                        {record.correct_answers.map((q, i) => (
                           <li key={i}>
-                            <strong>Q:</strong> {question} <br />
-                            <strong>✔ Correct Answer:</strong> {correct_answer}
+                            <strong>Q:</strong> {q}
                           </li>
                         ))}
                       </ul>
-                    ) : (
-                      <p>No incorrect answers</p>
-                    )}
+                    </div>
+                    <div className="incorrect-answers">
+                      <h3>❌ Incorrect Answers</h3>
+                      <ul>
+                        {record.incorrect_answers.map(
+                          ({ question, correct_answer }, i) => (
+                            <li key={i}>
+                              <strong>Q:</strong> {question} <br />
+                              <strong>✔ Correct:</strong> {correct_answer}
+                            </li>
+                          )
+                        )}
+                      </ul>
+                    </div>
                   </div>
-                </div>
-              )}
-            </div>
-          ))}
+                )}
+              </div>
+            );
+          })}
         </div>
       )}
-      <button className="home-button" onClick={goHome}>🏠 Back to Home</button>
+      <button className="home-button" onClick={goHome}>
+        🏠 Back to Home
+      </button>
     </div>
   );
 }
