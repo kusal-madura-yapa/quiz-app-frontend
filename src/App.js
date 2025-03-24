@@ -14,6 +14,7 @@ function App() {
   const [score, setScore] = useState(0);
   const [knowledgeLevel, setKnowledgeLevel] = useState(0.5);
   const [quizResults, setQuizResults] = useState(null);
+  const [questionIndex, setQuestionIndex] = useState(0);
   const [maxAttemptsQuestions, setMaxAttemptsQuestions] = useState([]);  // Store questions with max attempts
 
   const startQuiz = async () => {
@@ -45,7 +46,9 @@ function App() {
       const data = await response.json();
   
       if (data.message === "Quiz completed!") {
-        const resultsResponse = await fetch('http://localhost:5001/api/quiz_results', { credentials: 'include' });
+        const resultsResponse = await fetch('http://localhost:5001/api/quiz_results', {
+          credentials: 'include',
+        });
         const resultsData = await resultsResponse.json();
         setQuizResults(resultsData);
         setScreen('results');
@@ -53,11 +56,13 @@ function App() {
         setCurrentQuestion(data);
         setSelectedAnswer(null);
         setIsAnswerSubmitted(false);
+        setQuestionIndex((prevIndex) => prevIndex + 1); // ✅ Increment question index
       }
     } catch (error) {
       console.error('Error fetching next question:', error);
     }
   };
+  
 
   const resetData = async () => {
     try {
@@ -105,26 +110,7 @@ function App() {
     }
   };
 
-  const retakeQuiz = async () => {
-    // Fetch questions with the maximum attempts
-    try {
-      const response = await fetch('http://localhost:5003/api/get_max_attempts_questions', {
-        method: 'GET',
-        credentials: 'include',
-      });
-      const data = await response.json();
-      
-      if (response.ok) {
-        setMaxAttemptsQuestions(data.questions_with_fake_answers);  // Store the questions with fake answers
-        setScreen('quiz');  // Go to quiz screen with fetched questions
-        setQuizStarted(true);
-      } else {
-        console.error('Error fetching max attempts questions:', data.error);
-      }
-    } catch (error) {
-      console.error('Error retaking quiz:', error);
-    }
-  };
+
 
   return (
     <div className="app">
@@ -137,13 +123,17 @@ function App() {
       )}
       {screen === 'quiz' && quizStarted && currentQuestion && (
         <QuestionScreen
-          currentQuestion={currentQuestion}
-          isAnswerSubmitted={isAnswerSubmitted}
-          selectedAnswer={selectedAnswer}
-          handleAnswer={handleAnswer}
-          score={score}
-          knowledgeLevel={knowledgeLevel}
-        />
+        currentQuestion={currentQuestion}
+        isAnswerSubmitted={isAnswerSubmitted}
+        selectedAnswer={selectedAnswer}
+        handleAnswer={handleAnswer}
+        score={score}
+        knowledgeLevel={knowledgeLevel}
+        questionIndex={questionIndex - 1} // zero-based index
+        totalQuestions={10}
+        correctStreak={0} // (optional - hook into streak logic if needed)
+      />      
+      
       )}
       {screen === 'results' && <ResultsScreen results={quizResults} goHome={() => setScreen('home')} />}
       {screen === 'records' && <RecordsPage goHome={() => setScreen('home')} />}
