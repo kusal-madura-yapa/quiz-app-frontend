@@ -3,13 +3,14 @@ import "../styles/ReviewScreen.css";
 
 function ReviewScreen({ questions, selectedAnswers, handleAnswer, submitAnswers, goHome }) {
   const [showSubmit, setShowSubmit] = useState(false);
+  const [progress, setProgress] = useState(0);
 
   useEffect(() => {
-    // Check if all questions have been answered
-    const allAnswered = questions.every(q =>
-      selectedAnswers.some(ans => ans.question === q.question)
-    );
-    setShowSubmit(allAnswered);
+    const answeredCount = selectedAnswers.filter(ans =>
+      questions.find(q => q.question === ans.question)
+    ).length;
+    setProgress(Math.round((answeredCount / questions.length) * 100));
+    setShowSubmit(answeredCount === questions.length);
   }, [selectedAnswers, questions]);
 
   const onSelect = (questionText, answer) => {
@@ -18,7 +19,11 @@ function ReviewScreen({ questions, selectedAnswers, handleAnswer, submitAnswers,
 
   return (
     <div className="review-screen">
-      <h2 className="section-title">Retake Frequently Missed Questions</h2>
+      <h2 className="section-title">🎯 Retake Frequently Missed Questions</h2>
+      <div className="progress-bar-container">
+        <div className="progress-bar" style={{ width: `${progress}%` }} />
+        <span className="progress-text">{progress}% Complete</span>
+      </div>
 
       {questions.map((q, index) => {
         const userSelected = selectedAnswers.find(ans => ans.question === q.question)?.user_answer;
@@ -34,21 +39,24 @@ function ReviewScreen({ questions, selectedAnswers, handleAnswer, submitAnswers,
                   onClick={() => onSelect(q.question, option)}
                 >
                   {option}
+                  {userSelected === option && " ✔️"}
                 </button>
               ))}
             </div>
-            <p className="weak-area"><em>Category: {q.weakarea}</em></p>
+            <p className="weak-area">📚 <em>Category: {q.weakarea}</em></p>
             <hr />
           </div>
         );
       })}
 
       <div className="review-actions">
-        <button onClick={goHome} className="back-button">Back to Home</button>
+        <button onClick={goHome} className="back-button">🏠 Home</button>
         {showSubmit && (
-          <button onClick={submitAnswers} className="submit-button">Submit Answers</button>
+          <button onClick={submitAnswers} className="submit-button">🚀 Submit Answers</button>
         )}
       </div>
+
+      {showSubmit && <p className="motivation-text">🌟 Great job! You’re ready to go! 🌟</p>}
     </div>
   );
 }

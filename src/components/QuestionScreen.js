@@ -66,10 +66,6 @@ function QuestionScreen({
       {/* Progress Bar */}
       <div className="progress-container">
         <div className="progress-bar" style={{ width: `${progressPercentage}%` }}></div>
-
-        <span className="progress-text">
-          Question {questionIndex + 1} of {totalQuestions}
-        </span>
       </div>
 
       {/* Scoreboard */}

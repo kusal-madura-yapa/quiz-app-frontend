@@ -1,11 +1,52 @@
 .review-screen {
     padding: 20px;
-    max-width: 800px;
+    max-width: 900px;
     margin: auto;
+    font-family: 'Segoe UI', sans-serif;
+    background-color: #fdfdfd;
+  }
+  
+  .section-title {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+  }
+  
+  .progress-bar-container {
+    background-color: #eee;
+    border-radius: 20px;
+    overflow: hidden;
+    margin-bottom: 30px;
+    height: 20px;
+    position: relative;
+  }
+  
+  .progress-bar {
+    background-color: #4caf50;
+    height: 100%;
+    transition: width 0.3s ease-in-out;
+  }
+  
+  .progress-text {
+    position: absolute;
+    top: -25px;
+    right: 0;
+    font-size: 14px;
+    color: #555;
   }
   
   .question-block {
+    background: #fff;
+    border: 1px solid #ddd;
+    padding: 20px;
     margin-bottom: 25px;
+    border-radius: 12px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  }
+  
+  .question-text {
+    font-size: 18px;
+    margin-bottom: 10px;
   }
   
   .options-group {
@@ -16,22 +57,72 @@
   }
   
   .option-button {
-    padding: 8px 12px;
+    padding: 10px 16px;
     border-radius: 8px;
-    border: 1px solid #ccc;
+    border: 2px solid #ccc;
     cursor: pointer;
-    background-color: #f0f0f0;
+    background-color: #f9f9f9;
+    transition: all 0.2s ease-in-out;
+  }
+  
+  .option-button:hover {
+    background-color: #e0f7fa;
+    border-color: #00bcd4;
   }
   
   .option-button.selected {
-    background-color: #4caf50;
-    color: white;
+    background-color: #ffeb3b; /* Yellow */
+    color: #333;
+    border-color: #fbc02d;
     font-weight: bold;
+    transform: scale(1.05);
+  }
+  
+  
+  .weak-area {
+    margin-top: 10px;
+    font-size: 14px;
+    color: #666;
   }
   
   .review-actions {
     display: flex;
     justify-content: space-between;
     margin-top: 30px;
+  }
+  
+  .back-button,
+  .submit-button {
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  
+  .back-button {
+    background-color: #f44336;
+    color: white;
+  }
+  
+  .back-button:hover {
+    background-color: #d32f2f;
+  }
+  
+  .submit-button {
+    background-color: #2196f3;
+    color: white;
+  }
+  
+  .submit-button:hover {
+    background-color: #1976d2;
+  }
+  
+  .motivation-text {
+    text-align: center;
+    font-size: 18px;
+    color: #2e7d32;
+    margin-top: 20px;
   }
   

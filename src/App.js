@@ -3,7 +3,7 @@ import HomePage from './components/HomePage';
 import QuestionScreen from './components/QuestionScreen';
 import ResultsScreen from './components/ResultsScreen';
 import RecordsPage from './components/RecordsPage';
-import ReviewScreen from './components/ReviewScreen'; // ✅ New screen component
+import ReviewScreen from './components/ReviewScreen';
 import './styles.css';
 
 function App() {
@@ -17,7 +17,6 @@ function App() {
   const [quizResults, setQuizResults] = useState(null);
   const [questionIndex, setQuestionIndex] = useState(0);
 
-  // ✅ Review Mode State
   const [reviewQuestions, setReviewQuestions] = useState([]);
   const [reviewAnswers, setReviewAnswers] = useState([]);
   const [reviewResult, setReviewResult] = useState(null);
@@ -112,7 +111,6 @@ function App() {
     }
   };
 
-  // ✅ Fetch frequently incorrect questions
   const fetchReviewQuestions = async () => {
     try {
       const response = await fetch('http://localhost:5001/api/get_quiz_questions_re');
@@ -129,7 +127,6 @@ function App() {
     }
   };
 
-  // ✅ Submit reviewed answers
   const submitReviewAnswers = async () => {
     try {
       const response = await fetch('http://localhost:5001/api/submit_quiz_re', {
@@ -142,7 +139,7 @@ function App() {
       });
       const result = await response.json();
       setReviewResult(result);
-      setScreen('results');
+      setScreen('records'); // ✅ GO TO RECORDS PAGE
     } catch (error) {
       console.error('Error submitting review answers:', error);
     }
@@ -166,7 +163,7 @@ function App() {
           startQuiz={startQuiz}
           viewRecords={() => setScreen('records')}
           resetData={resetData}
-          reviewQuestions={fetchReviewQuestions} // ✅ Button in homepage
+          reviewQuestions={fetchReviewQuestions}
         />
       )}
       {screen === 'quiz' && quizStarted && currentQuestion && (
@@ -193,7 +190,7 @@ function App() {
       )}
       {screen === 'results' && (
         <ResultsScreen
-          results={quizResults || reviewResult}
+          results={quizResults}
           goHome={() => setScreen('home')}
         />
       )}
