@@ -72,7 +72,7 @@ function QuestionScreen({
       <div className="score-board">
         <span className="score">🏆 Score: {Math.round(score)}</span>
         <span className="knowledge-level">
-          📚 Knowledge Level: {(knowledgeLevel * 100).toFixed(1)}%
+          📚 Model focus : {(knowledgeLevel)}
         </span>
         <span className={`timer ${timeLeft <= 5 ? 'urgent' : ''}`}>
           ⏳ Time Left: {timeLeft}s
