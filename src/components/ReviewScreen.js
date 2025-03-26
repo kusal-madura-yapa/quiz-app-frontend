@@ -1,16 +1,19 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import "../styles/ReviewScreen.css";
 
 function ReviewScreen({ questions, selectedAnswers, handleAnswer, submitAnswers, goHome }) {
   const [showSubmit, setShowSubmit] = useState(false);
 
-  const onSelect = (questionText, answer) => {
-    handleAnswer(questionText, answer);
-
+  useEffect(() => {
+    // Check if all questions have been answered
     const allAnswered = questions.every(q =>
       selectedAnswers.some(ans => ans.question === q.question)
     );
     setShowSubmit(allAnswered);
+  }, [selectedAnswers, questions]);
+
+  const onSelect = (questionText, answer) => {
+    handleAnswer(questionText, answer);
   };
 
   return (
