@@ -4,6 +4,8 @@ import QuestionScreen from './components/QuestionScreen';
 import ResultsScreen from './components/ResultsScreen';
 import RecordsPage from './components/RecordsPage';
 import ReviewScreen from './components/ReviewScreen';
+import VideoRecommendations from './components/VideoRecommendations';
+
 import './styles.css';
 
 function App() {
@@ -20,6 +22,24 @@ function App() {
   const [reviewQuestions, setReviewQuestions] = useState([]);
   const [reviewAnswers, setReviewAnswers] = useState([]);
   const [reviewResult, setReviewResult] = useState(null);
+  const [videoSuggestions, setVideoSuggestions] = useState(null);
+
+
+  const fetchWeakAreasAndVideos = async () => {
+    try {
+      const response = await fetch('http://localhost:5001/api/weak_areas?userid=1');
+      const data = await response.json();
+      if (response.ok) {
+        setVideoSuggestions(data); // includes quiz_id, attempt_id, weak_areas, suggested_videos
+        setScreen('videos'); // new screen for video recommendations
+      } else {
+        console.error('Error fetching weak areas and videos:', data.error);
+      }
+    } catch (error) {
+      console.error('Error fetching weak areas and videos:', error);
+    }
+  };
+  
 
   const startQuiz = async () => {
     try {
@@ -160,11 +180,13 @@ function App() {
     <div className="app">
       {screen === 'home' && (
         <HomePage
-          startQuiz={startQuiz}
-          viewRecords={() => setScreen('records')}
-          resetData={resetData}
-          reviewQuestions={fetchReviewQuestions}
-        />
+        startQuiz={startQuiz}
+        viewRecords={() => setScreen('records')}
+        resetData={resetData}
+        reviewQuestions={fetchReviewQuestions}
+        viewRecommendations={fetchWeakAreasAndVideos}
+      />
+      
       )}
       {screen === 'quiz' && quizStarted && currentQuestion && (
         <QuestionScreen
@@ -197,6 +219,10 @@ function App() {
       {screen === 'records' && (
         <RecordsPage goHome={() => setScreen('home')} />
       )}
+      {screen === 'videos' && (
+  <VideoRecommendations data={videoSuggestions} goHome={() => setScreen('home')} />
+)}
+
     </div>
   );
 }
