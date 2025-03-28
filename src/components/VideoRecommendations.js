@@ -8,7 +8,9 @@ function VideoRecommendations({ data, goHome }) {
   const { weak_areas, suggested_videos, attempt_id, quiz_id } = data;
 
   useEffect(() => {
-    fetch("http://localhost:5001/api/video_history?userid=1")
+    fetch("http://localhost:5001/api/video_history", {
+      credentials: "include", // Session-based auth
+    })
       .then(res => res.json())
       .then(historyData => {
         const history = historyData.video_history || {};
@@ -33,6 +35,7 @@ function VideoRecommendations({ data, goHome }) {
   const markVideoWatched = async (video_id) => {
     try {
       await fetch("http://localhost:5001/api/track_video", {
+        credentials: "include", // Session-based auth
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

@@ -5,11 +5,14 @@ import ResultsScreen from './components/ResultsScreen';
 import RecordsPage from './components/RecordsPage';
 import ReviewScreen from './components/ReviewScreen';
 import VideoRecommendations from './components/VideoRecommendations';
+import LoginScreen from './components/LoginScreen';
 
 import './styles.css';
 
 function App() {
-  const [screen, setScreen] = useState('home');
+  const [screen, setScreen] = useState('login'); // start at login
+  const [userId, setUserId] = useState(null);
+
   const [quizStarted, setQuizStarted] = useState(false);
   const [currentQuestion, setCurrentQuestion] = useState(null);
   const [selectedAnswer, setSelectedAnswer] = useState(null);
@@ -24,14 +27,15 @@ function App() {
   const [reviewResult, setReviewResult] = useState(null);
   const [videoSuggestions, setVideoSuggestions] = useState(null);
 
-
   const fetchWeakAreasAndVideos = async () => {
     try {
-      const response = await fetch('http://localhost:5001/api/weak_areas?userid=1');
+      const response = await fetch('http://localhost:5001/api/weak_areas', {
+        credentials: 'include'
+      });
       const data = await response.json();
       if (response.ok) {
-        setVideoSuggestions(data); // includes quiz_id, attempt_id, weak_areas, suggested_videos
-        setScreen('videos'); // new screen for video recommendations
+        setVideoSuggestions(data);
+        setScreen('videos');
       } else {
         console.error('Error fetching weak areas and videos:', data.error);
       }
@@ -39,7 +43,6 @@ function App() {
       console.error('Error fetching weak areas and videos:', error);
     }
   };
-  
 
   const startQuiz = async () => {
     try {
@@ -47,7 +50,7 @@ function App() {
         method: 'POST',
         credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ user_id: 1 })
+        body: JSON.stringify({})
       });
       const data = await response.json();
       if (response.ok) {
@@ -137,7 +140,7 @@ function App() {
       const data = await response.json();
       if (response.ok) {
         setReviewQuestions(data.questions_with_fake_answers);
-        setReviewAnswers([]);  // Reset any previous answers
+        setReviewAnswers([]);
         setScreen('review');
       } else {
         console.error('Error fetching review questions:', data.error);
@@ -151,15 +154,13 @@ function App() {
     try {
       const response = await fetch('http://localhost:5001/api/submit_quiz_re', {
         method: 'POST',
+        credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          user_id: 1,
-          answers: reviewAnswers
-        })
+        body: JSON.stringify({ answers: reviewAnswers })
       });
       const result = await response.json();
       setReviewResult(result);
-      setScreen('records'); // ✅ GO TO RECORDS PAGE
+      setScreen('records');
     } catch (error) {
       console.error('Error submitting review answers:', error);
     }
@@ -176,17 +177,22 @@ function App() {
     setReviewAnswers(updatedAnswers);
   };
 
+  const handleLogin = (uid) => {
+    setUserId(uid);
+    setScreen('home');
+  };
+
   return (
     <div className="app">
-      {screen === 'home' && (
+      {screen === 'login' && <LoginScreen onLogin={handleLogin} />}
+      {screen === 'home' && userId && (
         <HomePage
-        startQuiz={startQuiz}
-        viewRecords={() => setScreen('records')}
-        resetData={resetData}
-        reviewQuestions={fetchReviewQuestions}
-        viewRecommendations={fetchWeakAreasAndVideos}
-      />
-      
+          startQuiz={startQuiz}
+          viewRecords={() => setScreen('records')}
+          resetData={resetData}
+          reviewQuestions={fetchReviewQuestions}
+          viewRecommendations={fetchWeakAreasAndVideos}
+        />
       )}
       {screen === 'quiz' && quizStarted && currentQuestion && (
         <QuestionScreen
@@ -220,9 +226,8 @@ function App() {
         <RecordsPage goHome={() => setScreen('home')} />
       )}
       {screen === 'videos' && (
-  <VideoRecommendations data={videoSuggestions} goHome={() => setScreen('home')} />
-)}
-
+        <VideoRecommendations data={videoSuggestions} goHome={() => setScreen('home')} />
+      )}
     </div>
   );
 }

@@ -7,8 +7,8 @@ function RecordsPage({ goHome }) {
   const [stats, setStats] = useState({});
 
   useEffect(() => {
-    fetch("http://localhost:5001/api/previous_records?userid=1", {
-      credentials: "include",
+    fetch("http://localhost:5001/api/previous_records", {
+      credentials: "include", // Session-based auth
     })
       .then((res) => res.json())
       .then((data) => {
@@ -21,21 +21,20 @@ function RecordsPage({ goHome }) {
 
   const calculateStats = (records) => {
     if (!records.length) return {};
-  
+
     const totalAttempts = records.length;
     const highestScore = Math.max(...records.map((r) => r.final_score));
     const averageScore =
       records.reduce((acc, r) => acc + r.final_score, 0) / totalAttempts;
-  
+
     const weakAreaCount = {};
     records.forEach((r) => {
       Object.keys(r.weak_areas || {}).forEach((area) => {
         weakAreaCount[area] = (weakAreaCount[area] || 0) + 1;
       });
     });
-  
-    let mostFrequentWeakArea = { area: "None", count: 0 };
 
+    let mostFrequentWeakArea = { area: "None", count: 0 };
     if (Object.keys(weakAreaCount).length > 0) {
       const sortedAreas = Object.entries(weakAreaCount).sort((a, b) => b[1] - a[1]);
       mostFrequentWeakArea = {
@@ -44,16 +43,13 @@ function RecordsPage({ goHome }) {
       };
     }
 
-
-  
     return {
       totalAttempts,
       highestScore,
-      averageScore, // <-- leave it as a number
+      averageScore,
       mostFrequentWeakArea,
     };
   };
-  
 
   const toggleDetails = (quizId) => {
     setShowDetails((prev) => ({
@@ -62,16 +58,13 @@ function RecordsPage({ goHome }) {
     }));
   };
 
-
-
   return (
     <div className="records-page">
       <div className="performance-dashboard">
         <h3>📊 Performance Summary</h3>
         <p><strong>Attempts:</strong> {stats.totalAttempts}</p>
-        <p><strong>Best Score:</strong> {stats.highestScore}</p>
+        <p><strong>Latest Score:</strong> {stats.highestScore}</p>
         <p><strong>Avg Score:</strong> {stats.averageScore?.toFixed(2)} %</p>
-
       </div>
 
       <h1 className="title">📜 Your Quiz Journey</h1>
