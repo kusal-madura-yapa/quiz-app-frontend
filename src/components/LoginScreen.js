@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import '../styles/LoginScreen.css';
 
-function LoginScreen({ onLogin }) {
+function LoginScreen({ onLogin, onSwitchToRegister }) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
@@ -26,7 +26,6 @@ function LoginScreen({ onLogin }) {
       <div className="login-box">
         <h2>Welcome Back 👋</h2>
         <p className="subtitle">Please login to continue</p>
-
         <input
           type="text"
           value={username}
@@ -42,6 +41,10 @@ function LoginScreen({ onLogin }) {
           className="input-field"
         />
         <button onClick={handleLogin} className="login-button">Login</button>
+        <p className="subtitle">
+          Don’t have an account?{' '}
+          <span className="link" onClick={onSwitchToRegister}>Register</span>
+        </p>
       </div>
     </div>
   );

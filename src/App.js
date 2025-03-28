@@ -6,11 +6,11 @@ import RecordsPage from './components/RecordsPage';
 import ReviewScreen from './components/ReviewScreen';
 import VideoRecommendations from './components/VideoRecommendations';
 import LoginScreen from './components/LoginScreen';
-
+import RegisterScreen from './components/RegisterScreen';
 import './styles.css';
 
 function App() {
-  const [screen, setScreen] = useState('login'); // start at login
+  const [screen, setScreen] = useState('login');
   const [userId, setUserId] = useState(null);
 
   const [quizStarted, setQuizStarted] = useState(false);
@@ -27,10 +27,15 @@ function App() {
   const [reviewResult, setReviewResult] = useState(null);
   const [videoSuggestions, setVideoSuggestions] = useState(null);
 
+  const handleLogin = (uid) => {
+    setUserId(uid);
+    setScreen('home');
+  };
+
   const fetchWeakAreasAndVideos = async () => {
     try {
       const response = await fetch('http://localhost:5001/api/weak_areas', {
-        credentials: 'include'
+        credentials: 'include',
       });
       const data = await response.json();
       if (response.ok) {
@@ -138,7 +143,7 @@ function App() {
     try {
       const response = await fetch('http://localhost:5001/api/get_quiz_questions_re', {
         method: 'GET',
-        credentials: 'include' // 🔑 important!
+        credentials: 'include',
       });
       const data = await response.json();
       if (response.ok) {
@@ -152,8 +157,6 @@ function App() {
       console.error('Error fetching review questions:', error);
     }
   };
-  
-  
 
   const submitReviewAnswers = async () => {
     try {
@@ -161,7 +164,7 @@ function App() {
         method: 'POST',
         credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ answers: reviewAnswers })  // no user_id here
+        body: JSON.stringify({ answers: reviewAnswers })
       });
       const result = await response.json();
       setReviewResult(result);
@@ -170,7 +173,6 @@ function App() {
       console.error('Error submitting review answers:', error);
     }
   };
-  
 
   const handleReviewAnswer = (question, userAnswer) => {
     const updatedAnswers = [...reviewAnswers];
@@ -183,16 +185,19 @@ function App() {
     setReviewAnswers(updatedAnswers);
   };
 
-  const handleLogin = (uid) => {
-    setUserId(uid);
-    setScreen('home');
-  };
-
-  
-
   return (
     <div className="app">
-      {screen === 'login' && <LoginScreen onLogin={handleLogin} />}
+      {screen === 'login' && (
+        <LoginScreen
+          onLogin={handleLogin}
+          onSwitchToRegister={() => setScreen('register')}
+        />
+      )}
+      {screen === 'register' && (
+        <RegisterScreen
+          onRegisterComplete={() => setScreen('login')}
+        />
+      )}
       {screen === 'home' && userId !== null && (
         <HomePage
           startQuiz={startQuiz}
@@ -234,7 +239,10 @@ function App() {
         <RecordsPage goHome={() => setScreen('home')} />
       )}
       {screen === 'videos' && (
-        <VideoRecommendations data={videoSuggestions} goHome={() => setScreen('home')} />
+        <VideoRecommendations
+          data={videoSuggestions}
+          goHome={() => setScreen('home')}
+        />
       )}
     </div>
   );
