@@ -136,7 +136,10 @@ function App() {
 
   const fetchReviewQuestions = async () => {
     try {
-      const response = await fetch('http://localhost:5001/api/get_quiz_questions_re');
+      const response = await fetch('http://localhost:5001/api/get_quiz_questions_re', {
+        method: 'GET',
+        credentials: 'include' // 🔑 important!
+      });
       const data = await response.json();
       if (response.ok) {
         setReviewQuestions(data.questions_with_fake_answers);
@@ -149,6 +152,8 @@ function App() {
       console.error('Error fetching review questions:', error);
     }
   };
+  
+  
 
   const submitReviewAnswers = async () => {
     try {
@@ -156,7 +161,7 @@ function App() {
         method: 'POST',
         credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ answers: reviewAnswers })
+        body: JSON.stringify({ answers: reviewAnswers })  // no user_id here
       });
       const result = await response.json();
       setReviewResult(result);
@@ -165,6 +170,7 @@ function App() {
       console.error('Error submitting review answers:', error);
     }
   };
+  
 
   const handleReviewAnswer = (question, userAnswer) => {
     const updatedAnswers = [...reviewAnswers];
@@ -182,10 +188,12 @@ function App() {
     setScreen('home');
   };
 
+  
+
   return (
     <div className="app">
       {screen === 'login' && <LoginScreen onLogin={handleLogin} />}
-      {screen === 'home' && userId && (
+      {screen === 'home' && userId !== null && (
         <HomePage
           startQuiz={startQuiz}
           viewRecords={() => setScreen('records')}
