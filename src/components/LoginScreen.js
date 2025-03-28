@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import '../styles/LoginScreen.css';
 
 function LoginScreen({ onLogin }) {
   const [username, setUsername] = useState('');
@@ -9,7 +10,7 @@ function LoginScreen({ onLogin }) {
       method: 'POST',
       credentials: 'include',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ username, password })  // ✅ sending both
+      body: JSON.stringify({ username, password }),
     });
 
     const data = await res.json();
@@ -21,21 +22,27 @@ function LoginScreen({ onLogin }) {
   };
 
   return (
-    <div className="login-screen">
-      <h2>Login</h2>
-      <input
-        type="text"
-        value={username}
-        onChange={e => setUsername(e.target.value)}
-        placeholder="Enter username"
-      />
-      <input
-        type="password"
-        value={password}
-        onChange={e => setPassword(e.target.value)}
-        placeholder="Enter password"
-      />
-      <button onClick={handleLogin}>Login</button>
+    <div className="login-container">
+      <div className="login-box">
+        <h2>Welcome Back 👋</h2>
+        <p className="subtitle">Please login to continue</p>
+
+        <input
+          type="text"
+          value={username}
+          onChange={e => setUsername(e.target.value)}
+          placeholder="Username"
+          className="input-field"
+        />
+        <input
+          type="password"
+          value={password}
+          onChange={e => setPassword(e.target.value)}
+          placeholder="Password"
+          className="input-field"
+        />
+        <button onClick={handleLogin} className="login-button">Login</button>
+      </div>
     </div>
   );
 }
