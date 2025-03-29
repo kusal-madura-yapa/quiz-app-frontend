@@ -12,18 +12,16 @@ function QuestionScreen({
   totalQuestions = 10,
   correctStreak = 0,
 }) {
-  const [timeLeft, setTimeLeft] = useState(15); // 15-second timer per question
+  const [timeLeft, setTimeLeft] = useState(15);
   const [gracePeriodTriggered, setGracePeriodTriggered] = useState(false);
 
-  // Countdown timer logic with grace period
+  // Timer logic
   useEffect(() => {
     if (isAnswerSubmitted) return;
 
     if (timeLeft === 0 && !gracePeriodTriggered) {
       setGracePeriodTriggered(true);
-      setTimeout(() => {
-        handleAnswer(null); // Auto-submit after short delay
-      }, 1000); // 1-second grace
+      setTimeout(() => handleAnswer(null), 1000); // Grace period
       return;
     }
 
@@ -31,7 +29,6 @@ function QuestionScreen({
     return () => clearTimeout(timer);
   }, [timeLeft, isAnswerSubmitted, gracePeriodTriggered, handleAnswer]);
 
-  // Reset timer and grace state on question change
   useEffect(() => {
     setTimeLeft(15);
     setGracePeriodTriggered(false);
@@ -53,38 +50,33 @@ function QuestionScreen({
 
   return (
     <div className="question-screen">
-      {/* Level Bar */}
+      {/* Level Dots */}
       <div className="level-bar-container">
         {Array.from({ length: totalQuestions }).map((_, i) => (
           <div
             key={i}
             className={`level-step ${i <= questionIndex ? 'filled' : ''}`}
-          ></div>
+          />
         ))}
       </div>
 
-      {/* Progress Bar */}
+      {/* Progress */}
       <div className="progress-container">
         <div className="progress-bar" style={{ width: `${progressPercentage}%` }}></div>
       </div>
 
-      {/* Scoreboard */}
+      {/* Score, Level, Timer */}
       <div className="score-board">
         <span className="score">🏆 Score: {Math.round(score)}</span>
-        <span className="knowledge-level">
-          📚 Model focus : {(knowledgeLevel)}
-        </span>
-        <span className={`timer ${timeLeft <= 5 ? 'urgent' : ''}`}>
-          ⏳ Time Left: {timeLeft}s
-        </span>
+        <span className="knowledge-level">📚 Model Focus: {knowledgeLevel.toFixed(2)}</span>
+        <span className={`timer ${timeLeft <= 5 ? 'urgent' : ''}`}>⏳ Time Left: {timeLeft}s</span>
       </div>
 
-      {/* Time's up warning */}
       {!isAnswerSubmitted && timeLeft === 0 && (
         <div className="time-warning">⏰ Time’s up! Submitting answer...</div>
       )}
 
-      {/* Question */}
+      {/* Question Text */}
       <h2 className="question-text">{currentQuestion.question}</h2>
 
       {/* Options */}

@@ -1,148 +1,211 @@
-/* Container */
-.video-recommendations {
-    padding: 2rem;
-    max-width: 1400px;
-    margin: auto;
-    font-family: 'Segoe UI', sans-serif;
-    color: #333;
-    padding-right: 300px; /* reserve space for fixed panel */
+/* Main dashboard container */
+.video-dashboard {
+  display: flex;
+  gap: 2rem;
+  padding: 2rem;
+  background-color: #f9fafb;
+  font-family: 'Segoe UI', sans-serif;
+  flex-wrap: wrap;
+}
+
+/* MAIN content (left) */
+.video-main {
+  flex: 2;
+  min-width: 600px;
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+  animation: fadeSlideIn 0.3s ease;
+}
+
+.video-main h2 {
+  font-size: 1.6rem;
+  margin-bottom: 1rem;
+  color: #1f2937;
+}
+
+.weak-areas {
+  list-style: none;
+  padding-left: 1.2rem;
+  margin-bottom: 2rem;
+}
+
+.weak-areas li {
+  margin-bottom: 0.5rem;
+  color: #334155;
+  font-size: 1.05rem;
+}
+
+/* Topic block */
+.video-topic {
+  margin-top: 2rem;
+}
+
+.video-topic h4 {
+  font-size: 1.2rem;
+  color: #1e293b;
+  margin-bottom: 0.8rem;
+}
+
+/* Video grid layout */
+.video-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+/* Video card */
+.video-card {
+  background-color: #ffffff;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  transition: transform 0.3s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.video-card:hover {
+  transform: translateY(-4px);
+}
+
+.video-card.watched {
+  border: 2px solid #16a34a;
+}
+
+.video-card iframe {
+  width: 100%;
+  height: 180px;
+}
+
+.video-meta {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.video-title {
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.video-description {
+  font-size: 0.95rem;
+  color: #4b5563;
+}
+
+/* Buttons */
+.btn {
+  padding: 0.6rem 1rem;
+  font-size: 0.95rem;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn-primary {
+  background-color: #16a34a;
+  color: white;
+}
+
+.btn-primary:hover {
+  background-color: #15803d;
+}
+
+.btn-disabled {
+  background-color: #9ca3af;
+  color: white;
+  cursor: not-allowed;
+}
+
+.btn.danger {
+  background-color: #dc2626;
+  color: white;
+}
+
+.btn.danger:hover {
+  background-color: #b91c1c;
+}
+
+.back-btn {
+  margin-top: 2rem;
+}
+
+/* Sidebar (right) */
+.video-sidebar {
+  flex: 1;
+  min-width: 300px;
+  max-height: calc(100vh - 4rem);
+  overflow-y: auto;
+  background-color: #f3f4f6;
+  padding: 1.5rem;
+  border-radius: 16px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.04);
+}
+
+.video-sidebar h3 {
+  margin-bottom: 1.2rem;
+  font-size: 1.4rem;
+  color: #1f2937;
+}
+
+.history-group h4 {
+  margin-top: 1.5rem;
+  margin-bottom: 0.6rem;
+  font-size: 1.1rem;
+  color: #334155;
+}
+
+.history-card {
+  background: #ffffff;
+  padding: 1rem;
+  border-radius: 10px;
+  border-left: 4px solid #4f46e5;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+}
+
+.history-card p {
+  margin: 0.2rem 0;
+  font-size: 0.95rem;
+  color: #374151;
+}
+
+.history-card .tag {
+  color: #6b7280;
+  font-style: italic;
+}
+
+.history-card small {
+  display: block;
+  margin-top: 0.3rem;
+  color: #6b7280;
+  font-size: 0.85rem;
+}
+
+/* Animation */
+@keyframes fadeSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
   }
-  
-  /* Fixed Right Panel - Watch History */
-  .performance-dashboard {
-    position: fixed;
-    top: 40px;
-    right: 40px;
-    background: #ffffff;
-    border: 2px solid #1976d2;
-    padding: 20px;
-    border-radius: 12px;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-    z-index: 1000;
-    width: 280px;
-    text-align: left;
-    font-size: 16px;
-    max-height: 80vh;
-    overflow-y: auto;
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
-  
-  /* Weak Areas */
-  .weak-areas-list {
-    list-style: none;
-    padding: 0;
+}
+
+/* Responsive: Stack on mobile */
+@media (max-width: 960px) {
+  .video-dashboard {
+    flex-direction: column;
   }
-  
-  .weak-areas-list li {
-    background: #fff;
-    padding: 8px 12px;
-    margin: 6px 0;
-    border-radius: 6px;
-    border-left: 4px solid #2980b9;
-  }
-  
-  /* Watch History */
-  .history-entry {
-    background: #fff;
-    margin-top: 10px;
-    padding: 10px;
-    border-left: 4px solid #2ecc71;
-    border-radius: 6px;
-  }
-  
-  /* Section Headers */
-  .section-subtitle {
-    font-size: 1.6rem;
-    margin-top: 3rem;
-    margin-bottom: 1.2rem;
-    color: #2c3e50;
-  }
-  
-  .topic-section {
+
+  .video-sidebar {
+    max-width: 100%;
     margin-top: 2rem;
   }
-  
-  .topic-title {
-    font-size: 1.4rem;
-    color: #2980b9;
-    margin-bottom: 1rem;
-  }
-  
-  /* Video Grid Layout */
-  .video-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-    gap: 20px;
-  }
-  
-  .video-card {
-    background: #fff;
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-  }
-  
-  .video-card iframe {
-    width: 100%;
-    height: 180px;
-  }
-  
-  .video-info {
-    padding: 12px;
-  }
-  
-  /* Buttons */
-  .watch-button {
-    margin-top: 8px;
-    padding: 8px 16px;
-    border: none;
-    border-radius: 4px;
-    font-weight: bold;
-    background-color: #3498db;
-    color: white;
-    cursor: pointer;
-  }
-  
-  .watch-button.watched {
-    background-color: #2ecc71;
-    cursor: not-allowed;
-  }
-  
-  .back-button {
-    background-color: #2980b9;
-    color: white;
-    padding: 12px 24px;
-    font-size: 1rem;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-  }
-  
-  .back-button:hover {
-    background-color: #1c5980;
-  }
-  
-  .full-width {
-    text-align: center;
-    margin-top: 40px;
-  }
-  
-  /* Main content layout wrapper (if needed) */
-  .main-content {
-    width: 100%;
-  }
-  
-  /* Optional: Responsive fixes */
-  @media (max-width: 1024px) {
-    .performance-dashboard {
-      position: relative;
-      top: auto;
-      right: auto;
-      width: 100%;
-      margin-top: 2rem;
-    }
-  
-    .video-recommendations {
-      padding-right: 2rem;
-    }
-  }
-  
+}

@@ -9,7 +9,7 @@ function VideoRecommendations({ data, goHome }) {
 
   useEffect(() => {
     fetch("http://localhost:5001/api/video_history", {
-      credentials: "include", // Session-based auth
+      credentials: "include",
     })
       .then(res => res.json())
       .then(historyData => {
@@ -35,7 +35,7 @@ function VideoRecommendations({ data, goHome }) {
   const markVideoWatched = async (video_id) => {
     try {
       await fetch("http://localhost:5001/api/track_video", {
-        credentials: "include", // Session-based auth
+        credentials: "include",
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -52,44 +52,21 @@ function VideoRecommendations({ data, goHome }) {
   };
 
   return (
-    <div className="video-recommendations">
-      {/* Fixed Watch History Panel */}
-      <div className="performance-dashboard">
-        <h3>🕘 Watch History</h3>
-        {videoHistory ? (
-          Object.entries(videoHistory).map(([quizId, entries]) => (
-            <div key={quizId} className="history-section">
-              <h4>📘 Quiz #{quizId}</h4>
-              {entries.map(entry => (
-                <div key={entry.video_id} className="history-entry">
-                  <p><strong>{entry.title}</strong> ({entry.weakarea})</p>
-                  <p>{entry.description}</p>
-                  <p className="watch-meta">
-                    {entry.watched ? "✅ Watched" : "❌ Not Watched"} | {entry.clicked_at}
-                  </p>
-                </div>
-              ))}
-            </div>
-          ))
-        ) : (
-          <p>Loading history...</p>
-        )}
-      </div>
-
-      {/* Main Content Area */}
-      <div className="main-content">
-        <h2>📊 Weak Areas - Attempt #{attempt_id}</h2>
-        <ul className="weak-areas-list">
+    <div className="video-dashboard">
+      {/* Left Content */}
+      <div className="video-main">
+        <h2>📊 Attempt #{attempt_id} – Weak Areas</h2>
+        <ul className="weak-areas">
           {Object.entries(weak_areas).map(([topic, count]) => (
             <li key={topic}>🔹 <strong>{topic}</strong>: {count} mistake(s)</li>
           ))}
         </ul>
 
-        <h3 className="section-subtitle">🎥 Recommended Videos</h3>
+        <h3>🎥 Recommended Videos</h3>
         {Object.entries(suggested_videos).map(([topic, videos]) => (
-          <div key={topic} className="topic-section">
-            <h4 className="topic-title">{topic}</h4>
-            <div className="video-grid">
+          <div key={topic} className="video-topic">
+            <h4>{topic}</h4>
+            <div className="video-list">
               {videos.map(video => {
                 const embedUrl = getYouTubeEmbedUrl(video.url);
                 const isWatched = watchedVideoIds.has(video.video_id);
@@ -103,11 +80,11 @@ function VideoRecommendations({ data, goHome }) {
                       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                       allowFullScreen
                     ></iframe>
-                    <div className="video-info">
+                    <div className="video-meta">
                       <p className="video-title">{video.title}</p>
                       <p className="video-description">{video.description}</p>
                       <button
-                        className={`watch-button ${isWatched ? 'watched' : ''}`}
+                        className={`btn ${isWatched ? 'btn-disabled' : 'btn-primary'}`}
                         onClick={() => markVideoWatched(video.video_id)}
                         disabled={isWatched}
                       >
@@ -120,10 +97,28 @@ function VideoRecommendations({ data, goHome }) {
             </div>
           </div>
         ))}
+        <button className="btn danger back-btn" onClick={goHome}>⬅ Back to Home</button>
+      </div>
 
-        <div className="button-group full-width">
-          <button className="back-button" onClick={goHome}>⬅ Back to Home</button>
-        </div>
+      {/* Right Sidebar */}
+      <div className="video-sidebar">
+        <h3>🕘 Watch History</h3>
+        {videoHistory ? (
+          Object.entries(videoHistory).map(([quizId, entries]) => (
+            <div key={quizId} className="history-group">
+              <h4>Quiz #{quizId}</h4>
+              {entries.map(entry => (
+                <div key={entry.video_id} className="history-card">
+                  <p><strong>{entry.title}</strong> <span className="tag">({entry.weakarea})</span></p>
+                  <p>{entry.description}</p>
+                  <small>{entry.watched ? "✅ Watched" : "❌ Not Watched"} | {entry.clicked_at}</small>
+                </div>
+              ))}
+            </div>
+          ))
+        ) : (
+          <p>Loading watch history...</p>
+        )}
       </div>
     </div>
   );
