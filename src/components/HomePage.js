@@ -1,6 +1,6 @@
 import React from 'react';
 
-function HomePage({ startQuiz, viewRecords, resetData, reviewQuestions, viewRecommendations }) {
+function HomePage({ startQuiz, viewRecords, resetData, reviewQuestions, viewRecommendations, viewLeaderboard }) {
   return (
     <div className="home-page">
       <h1 className="home-title">Welcome to the Adaptive Quiz</h1>
@@ -14,6 +14,7 @@ function HomePage({ startQuiz, viewRecords, resetData, reviewQuestions, viewReco
       <div className="button-group">
         <button className="reset-button" onClick={resetData}>Reset Quiz Data</button>
         <button className="practice-button" onClick={reviewQuestions}>Retake Weak Questions</button>
+        <button onClick={viewLeaderboard}>🏆 View Leaderboard</button>
       </div>
     </div>
   );

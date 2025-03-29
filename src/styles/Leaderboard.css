@@ -1,0 +1,72 @@
+.leaderboard-container {
+    max-width: 1000px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background-color: #fafafa;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    text-align: center;
+    animation: fadeIn 0.4s ease-in;
+  }
+  
+  .leaderboard-title {
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+    color: #333;
+  }
+  
+  .table-wrapper {
+    overflow-x: auto;
+    margin-bottom: 2rem;
+  }
+  
+  .leaderboard-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+  }
+  
+  .leaderboard-table th,
+  .leaderboard-table td {
+    padding: 12px;
+    border-bottom: 1px solid #e0e0e0;
+    text-align: center;
+  }
+  
+  .leaderboard-table th {
+    background-color: #f1f3f5;
+    color: #333;
+    font-weight: 600;
+  }
+  
+  .leaderboard-table tr:hover {
+    background-color: #f9f9f9;
+  }
+  
+  .loading,
+  .empty {
+    font-size: 1.1rem;
+    color: #666;
+    margin-top: 2rem;
+  }
+  
+  .home-button {
+    padding: 0.7rem 1.5rem;
+    font-size: 1rem;
+    background-color: #4f46e5;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  
+  .home-button:hover {
+    background-color: #3730a3;
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  

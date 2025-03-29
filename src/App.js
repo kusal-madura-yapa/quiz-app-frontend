@@ -7,6 +7,7 @@ import ReviewScreen from './components/ReviewScreen';
 import VideoRecommendations from './components/VideoRecommendations';
 import LoginScreen from './components/LoginScreen';
 import RegisterScreen from './components/RegisterScreen';
+import Leaderboard from './components/Leaderboard'; // ✅ NEW: Import Leaderboard
 import './styles.css';
 
 function App() {
@@ -205,6 +206,7 @@ function App() {
           resetData={resetData}
           reviewQuestions={fetchReviewQuestions}
           viewRecommendations={fetchWeakAreasAndVideos}
+          viewLeaderboard={() => setScreen('leaderboard')} // ✅ Added this
         />
       )}
       {screen === 'quiz' && quizStarted && currentQuestion && (
@@ -244,8 +246,10 @@ function App() {
           goHome={() => setScreen('home')}
         />
       )}
+      {screen === 'leaderboard' && (
+        <Leaderboard goHome={() => setScreen('home')} /> // ✅ Renders the leaderboard screen
+      )}
     </div>
   );
 }
-
 export default App;
